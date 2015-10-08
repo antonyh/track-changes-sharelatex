@@ -50,7 +50,7 @@ describe "DocArchiveManager", ->
 		it "should run archiveDocChangesWithLock with the lock", ->
 			@LockManager.runWithLock
 				.calledWith(
-					"HistoryLock:#{@doc_id}"
+					"ArchiveLock:#{@doc_id}"
 				)
 				.should.equal true
 
@@ -98,7 +98,7 @@ describe "DocArchiveManager", ->
 		it "should run unArchiveDocChangesWithLock with the lock", ->
 			@LockManager.runWithLock
 				.calledWith(
-					"HistoryLock:#{@doc_id}"
+					"ArchiveLock:#{@doc_id}"
 				)
 				.should.equal true
 

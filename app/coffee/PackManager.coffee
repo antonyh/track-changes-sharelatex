@@ -369,7 +369,7 @@ module.exports = PackManager =
 			callback = options
 			options = {}
 		LockManager.runWithLock(
-			"HistoryLock:#{doc_id}",
+			"ArchiveLock:#{doc_id}",
 			(releaseLock) ->
 				PackManager._packDocHistory(doc_id, options, releaseLock)
 			,	callback

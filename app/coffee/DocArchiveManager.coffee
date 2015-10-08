@@ -22,7 +22,7 @@ module.exports = DocArchiveManager =
 	archiveDocChangesWithLock: (project_id, doc_id, callback = (error) ->) ->
 		job = (releaseLock) ->
 			DocArchiveManager.archiveDocChanges project_id, doc_id, releaseLock
-		LockManager.runWithLock("HistoryLock:#{doc_id}", job, callback)
+		LockManager.runWithLock("ArchiveLock:#{doc_id}", job, callback)
 
 	archiveDocChanges: (project_id, doc_id, callback)->
 		MongoManager.getDocChangesCount doc_id, (error, count) ->
@@ -72,7 +72,7 @@ module.exports = DocArchiveManager =
 	unArchiveDocChangesWithLock: (project_id, doc_id, callback = (error) ->) ->
 		job = (releaseLock) ->
 			DocArchiveManager.unArchiveDocChanges project_id, doc_id, releaseLock
-		LockManager.runWithLock("HistoryLock:#{doc_id}", job, callback)
+		LockManager.runWithLock("ArchiveLock:#{doc_id}", job, callback)
 
 	unArchiveDocChanges: (project_id, doc_id, callback)->
 		MongoManager.getArchivedDocChanges doc_id, (error, count) ->
