@@ -4,7 +4,7 @@ sinon = require("sinon")
 modulePath = "../../../../app/js/MongoAWS.js"
 SandboxedModule = require('sandboxed-module')
 {ObjectId} = require("mongojs")
-MemoryStream = require('memorystream')
+MemoryStream = require('memory-streams')
 zlib = require "zlib"
 
 describe "MongoAWS", ->
@@ -38,7 +38,9 @@ describe "MongoAWS", ->
 		beforeEach (done) ->
 			@awssdk.config = { update: sinon.stub() }
 			@awssdk.S3 = sinon.stub()
-			@S3S.WriteStream = MemoryStream.createWriteStream
+			@writeStream = new MemoryStream.WritableStream()
+			@writeStream.end()
+			@S3S.WriteStream = () => return @writeStream
 			@db.docHistory = {}
 			@db.docHistory.findOne = sinon.stub().callsArgWith(1, null, {"pack":"hello"})
 
@@ -55,8 +57,10 @@ describe "MongoAWS", ->
 			zlib.gzip '{"pack":"123"}', (err, zbuf) =>
 				@awssdk.config = { update: sinon.stub() }
 				@awssdk.S3 = sinon.stub()
-				@S3S.ReadStream = () ->
-					MemoryStream.createReadStream(zbuf, {readable:true})
+				@readStream = new MemoryStream.ReadableStream()
+				@readStream.append(zbuf)
+				@S3S.ReadStream = () =>
+					@readStream
 				@db.docHistory = {}
 				@db.docHistory.insert = sinon.stub().callsArgWith(1, null, "pack")
 
